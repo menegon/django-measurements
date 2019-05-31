@@ -15,7 +15,7 @@ class Parameter(models.Model):
     objects = models.Manager()
     extra = PostgresManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return u'{}'.format(self.label)
 
 
@@ -26,7 +26,7 @@ class Sensor(models.Model):
     objects = models.Manager()
     extra = PostgresManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return u'{}'.format(self.label)
 
 
@@ -37,7 +37,7 @@ class Location(models.Model):
     objects = models.Manager()
     extra = PostgresManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return u'{}'.format(self.label)
 
 
@@ -45,14 +45,14 @@ class Network(models.Model):
     code = models.CharField(max_length=100)
     label = models.CharField(max_length=150, blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return u'{}'.format(self.label)
 
 
 class SourceType(models.Model):
     code = models.CharField(max_length=100, unique=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return u'{}'.format(self.code)
 
 
@@ -67,7 +67,7 @@ class Station(models.Model):
     objects = models.Manager()
     extra = PostgresManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return u'{}'.format(self.code)
 
 
@@ -97,7 +97,7 @@ class Serie(models.Model):
         self.save()
         return self.stats_mean
 
-    def __unicode__(self):
+    def __str__(self):
         return u'{} - {} - {}'.format(self.location.label, self.parameter.label, self.sensor.label)
 
 
