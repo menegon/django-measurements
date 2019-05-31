@@ -2,9 +2,9 @@
 
 from django.db import migrations
 
-def load_unknow_sensor(apps, schema_editor):
+def load_unknown_sensor(apps, schema_editor):
     Sensor = apps.get_model('measurements', 'Sensor')
-    Sensor.objects.create(code="unknow", label="Unknow sernsor")
+    Sensor.objects.create(code="unknown", label="Unknown sernsor")
 
 class Migration(migrations.Migration):
 
@@ -13,5 +13,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(load_unknow_sensor)
+        migrations.RunPython(load_unknown_sensor)
     ]
