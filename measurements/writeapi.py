@@ -7,6 +7,8 @@ from basicauth.decorators import basic_auth_required
 from django.http import HttpResponse
 from datetime import datetime
 
+from .utils import get_serie
+
 #
 # @basic_auth_required(
 #     target_test=lambda request: not request.user.is_authenticated
@@ -64,19 +66,13 @@ def _write(rjson):
     for r in rjson:
         tags = r['t']
         fields = r['f']
+
+
         _station = tags['station']
-        station, created = Station.objects.get_or_create(code=_station)
-
         _parameter = tags['parameter']
-        parameter, created = Parameter.objects.get_or_create(code=_parameter)
+        _sensor = tags.get('sensor', 'unknown')
 
-        _sensor = tags.get('sensor', 'Default')
-        sensor, created = Sensor.objects.get_or_create(code=_sensor)
-
-        serie, created = Serie.objects.get_or_create(parameter=parameter,
-                                                     sensor=sensor,
-                                                     station=station
-                                                     )
+        serie = get_serie(_station, _parameter, _sensor)
 
         timestamp = r.get('ts')
         print("TS", timestamp)
