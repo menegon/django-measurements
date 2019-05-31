@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name='measurements',
+    name='django-measurements',
     version='0.1',
     packages=['measurements'],
     url='',
