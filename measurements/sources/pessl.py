@@ -17,6 +17,7 @@ class PesslAPI(BaseSource):
         self.baseurl = "https://api.fieldclimate.com"
         self.public_key = public_key
         self.private_key = private_key
+        self.tz = tz
 
     def get_auth_headers(self, request, method="GET"):
         d = datetime.datetime.utcnow()
