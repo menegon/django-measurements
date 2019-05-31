@@ -61,7 +61,7 @@ class Station(models.Model):
     label = models.CharField(max_length=150, null=True, blank=True)
     network = models.ForeignKey(Network, on_delete=models.CASCADE, null=True, blank=True)
     location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True, blank=True)
-    #TODO: not sure if source should be in Staton or Serie
+    #TODO: not sure if source should be in Station or Serie
     source = models.ForeignKey(SourceType, on_delete=models.CASCADE, null=True, blank=True)
 
     objects = models.Manager()
@@ -77,8 +77,8 @@ class Serie(models.Model):
     parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE)
 
     # add below additional fields
-    stats_mean = models.FloatField(null=True)
-    stats_outliers = ArrayField(models.IntegerField(), null=True)
+    stats_mean = models.FloatField(blank=True, null=True)
+    stats_outliers = ArrayField(models.IntegerField(), blank=True, null=True)
 
     objects = models.Manager()
     extra = PostgresManager()
@@ -98,7 +98,7 @@ class Serie(models.Model):
         return self.stats_mean
 
     def __str__(self):
-        return u'{} - {} - {}'.format(self.location.label, self.parameter.label, self.sensor.label)
+        return u'{} - {} - {}'.format(self.station.label, self.parameter.label, self.sensor.label)
 
 
 class Measure(models.Model):
@@ -108,3 +108,6 @@ class Measure(models.Model):
 
     objects = models.Manager()
     extra = PostgresManager()
+
+    class Meta:
+        unique_together = ('serie', 'timestamp', 'value')
