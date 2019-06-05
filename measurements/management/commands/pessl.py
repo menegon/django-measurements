@@ -29,39 +29,5 @@ class Command(BaseCommand):
 
             for k, v in PARAMETER_MAP.items():
                 if k in df.columns:
-                    serie = get_serie(s, k)
+                    serie = get_serie(s, v)
                     load_serie(df[k].copy(), serie.id)
-
-
-
-    def __handle(self, *args, **options):
-        # client = InfluxMeteo()
-        # datanow = utcnow()
-        lastvalues = []
-        parameters = []
-        for centralina in Centralina.objects.using('meteo').filter(status='attiva', tipo_centralina='pessl'):
-            _centralina = centralina.id
-            # _mz = centralina.macrozona.nome
-            _mz = 'tn'
-            if centralina.proprietario == 'lavis':
-                df = pesslapilavis.get_df(centralina.codice, last=120)
-            else:
-                df = pesslapi.get_df(centralina.codice, last=120)
-
-            load_data(df, 'Precipitation', 'sum', 'Precip', _centralina, 'Precip')
-            load_data(df, 'Leaf Wetness', 'time', 'BagnaturaFogl', _centralina, 'PercBagnaturaFogl')
-            load_data(df, 'HC Air temperature', 'avg', 'TempAria', _centralina, 'TempAria')
-            load_data(df, 'HC Relative humidity', 'avg', 'UmidAria', _centralina, 'UmidAriaRel')
-            load_data(df, 'Dew Point', 'avg', 'PntRugiada', _centralina, 'PntRugiada')
-            load_data(df, 'Wind speed', 'avg', 'VelDirVento', _centralina, 'VelVento')
-
-            # client.write('Syncdata', _centralina, 'Syncdata', datanow, 1, extratags={'tc': 'p', 'mz': _mz})
-            # lastvalues.append((centralina.codice, centralina.denominazione, df.index.max()))
-            # parameters.append((centralina.codice, centralina.denominazione, df.columns.levels[0].sort_values()))
-
-            print()
-            df.columns.levels[0].sort_values()
-        print()
-        pd.DataFrame(lastvalues)
-        print()
-        pd.DataFrame(parameters)
