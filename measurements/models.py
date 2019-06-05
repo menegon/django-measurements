@@ -16,7 +16,7 @@ class Parameter(models.Model):
     extra = PostgresManager()
 
     def __str__(self):
-        return u'{}'.format(self.label)
+        return u'{}'.format(self.code)
 
 
 class Sensor(models.Model):
