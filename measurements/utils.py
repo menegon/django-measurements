@@ -30,3 +30,10 @@ def load_serie(data, serie_id):
     Measure.extra.on_conflict(df.columns.to_list(),
                               ConflictAction.UPDATE).bulk_insert(datadict)
     return
+
+
+def strong_float(value):
+    if value in [None, '']:
+        return None
+    else:
+        return float(value)
