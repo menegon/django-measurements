@@ -20,7 +20,8 @@ class NetworkAdmin(admin.ModelAdmin):
 
 
 class SerieAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('station', 'sensor', 'parameter', 'height')
+    list_filter = ('station', 'sensor', 'parameter')
 
 
 class StationAdmin(admin.ModelAdmin):
@@ -32,7 +33,8 @@ class SourceTypeAdmin(admin.ModelAdmin):
 
 
 class MeasureAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('serie', 'timestamp', 'value')
+
 
 admin.site.register(Parameter, ParameterAdmin)
 admin.site.register(Sensor, SensorAdmin)

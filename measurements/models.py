@@ -68,7 +68,9 @@ class Station(models.Model):
     extra = PostgresManager()
 
     def __str__(self):
-        return u'{}'.format(self.code)
+        l = getattr(self, 'label') or getattr(self, 'code')
+        n = getattr(self, 'network', '')
+        return u'{} {}'.format(l, n)
 
 
 class Serie(models.Model):
@@ -99,7 +101,7 @@ class Serie(models.Model):
         return self.stats_mean
 
     def __str__(self):
-        return u'{} - {} - {}'.format(self.station.label, self.parameter.label, self.sensor.label)
+        return u'{} - {} - {}'.format(self.station, self.parameter, self.sensor.label)
 
 
 class Measure(models.Model):
