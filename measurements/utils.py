@@ -4,7 +4,7 @@ from psqlextra.query import ConflictAction
 from measurements.models import Measure, Station, Parameter, Sensor, Serie
 
 
-def get_serie(station, parameter, sensor='unknown'):
+def get_serie(station, parameter, sensor='unknown', height=None):
     if not isinstance(station, Station):
         station, created = Station.objects.get_or_create(code=station)
     if not isinstance(parameter, Parameter):
@@ -14,7 +14,8 @@ def get_serie(station, parameter, sensor='unknown'):
 
     serie, created = Serie.objects.get_or_create(station=station,
                                                  parameter=parameter,
-                                                 sensor=sensor)
+                                                 sensor=sensor,
+                                                 height=height)
     return serie
 
 

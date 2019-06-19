@@ -12,7 +12,7 @@ import xml.etree.ElementTree as et
 from measurements.sources.base import BaseSource
 from measurements.utils import strong_float
 
-class MeteotrentinoAPI(BaseSource):
+class MttAPI(BaseSource):
     def __init__(self, tz='Etc/GMT-1'):
         self.baseurl = "http://dati.meteotrentino.it/service.asmx/ultimiDatiStazione?"
         self.tz = tz

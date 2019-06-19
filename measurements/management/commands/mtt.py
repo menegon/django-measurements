@@ -2,17 +2,17 @@ from django.core.management.base import BaseCommand
 
 # from meteo.pgutils import load_data
 from measurements.settings import SOURCE_AUTH
-from measurements.sources.meteotrentino import MeteotrentinoAPI
+from measurements.sources.mtt import MttAPI
 from measurements.models import SourceType
 from measurements.utils import get_serie, load_serie
 
 
-PARAMETER_MAP = {"temperatura": "At_temp",
+PARAMETER_MAP = {"temperatura": "AtTemp",
                  "pioggia": "Precipitation",
-                 "d": "WindDirFrom",
-                 "v": "WindSpd",
+                 # "d": "WindDirFrom",
+                 "v": "WindSpeed",
                  "rh": "RelHumidity",
-                 "rsg": "GlobalRadiation"
+                 "rsg": "GlobalRad"
                  }
 
 
@@ -20,9 +20,9 @@ class Command(BaseCommand):
     help = "Command to import Meteotrentino data"
 
     def handle(self, *args, **options):
-        ps = SourceType.objects.get(code='meteotrentino')
+        ps = SourceType.objects.get(code='mtt')
         for s in ps.station_set.all():
-            apiclient = MeteotrentinoAPI()
+            apiclient = MttAPI()
             df = apiclient.get_df(s.code)
 
             for k, v in PARAMETER_MAP.items():

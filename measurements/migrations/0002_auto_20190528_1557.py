@@ -5,6 +5,9 @@ from django.db import migrations
 def load_sources(apps, schema_editor):
     SourceType = apps.get_model('measurements', 'SourceType')
     SourceType.objects.create(code="pessl")
+    SourceType.objects.create(code="mtt")
+    SourceType.objects.create(code="elmed")
+    SourceType.objects.create(code="davis")
 
 class Migration(migrations.Migration):
 

@@ -75,6 +75,7 @@ class Serie(models.Model):
     station = models.ForeignKey(Station, on_delete=models.CASCADE)
     sensor = models.ForeignKey(Sensor, on_delete=models.CASCADE)
     parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE)
+    height = models.FloatField(blank=True, null=True)
 
     # add below additional fields
     stats_mean = models.FloatField(blank=True, null=True)

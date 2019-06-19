@@ -6,12 +6,12 @@ from measurements.sources.pessl import PesslAPI
 from measurements.models import SourceType
 from measurements.utils import get_serie, load_serie
 
-PARAMETER_MAP = {"Precipitation|sum": "Precip", #
-                 "Leaf Wetness|time": "LeafWetness", #
-                 'HC Air temperature|avg': "At_temp", # http://vocab.nerc.ac.uk/collection/P01/current/CTMPZZ01/
+PARAMETER_MAP = {"Precipitation|sum": "Precipitation", #
+                 "Leaf Wetness|time": "LeafWet", #
+                 'HC Air temperature|avg': "AtTemp", # http://vocab.nerc.ac.uk/collection/P01/current/CTMPZZ01/
                  "HC Relative humidity|avg": "RelHumidity", #http://vocab.nerc.ac.uk/collection/P01/current/CHUMZZ01/
                  "Dew Point|avg": "DewPoint", # http://vocab.nerc.ac.uk/collection/P01/current/CDEWZZ01/
-                 "Wind speed|avg": "WindSpd", # http://vocab.nerc.ac.uk/collection/P01/current/EWSBZZ01/
+                 "Wind speed|avg": "WindSpeed", # http://vocab.nerc.ac.uk/collection/P01/current/EWSBZZ01/
                  }
 
 
