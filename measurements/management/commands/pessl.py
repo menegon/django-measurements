@@ -20,7 +20,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         ps = SourceType.objects.get(code='pessl')
-        for s in ps.station_set.all():
+        for s in ps.station_set.filter(status='active'):
             keys = SOURCE_AUTH['pessl'][s.network.code]
             print(keys)
             pesslapi = PesslAPI(keys['public_key'],

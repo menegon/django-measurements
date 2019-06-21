@@ -24,7 +24,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         ps = SourceType.objects.get(code='elmed')
-        for s in ps.station_set.all():
+        for s in ps.station_set.filter(status='active'):
             keys = SOURCE_AUTH['elmed'][s.network.code]
             elmedapi = ElmedAPI(None,
                                 keys['private_key'])

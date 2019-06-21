@@ -21,7 +21,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         ps = SourceType.objects.get(code='davis')
-        for s in ps.station_set.all():
+        for s in ps.station_set.filter(status='active'):
             davisapi = DavisAPI()
             df = davisapi.get_df(s.code, 5)
 

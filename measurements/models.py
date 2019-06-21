@@ -63,6 +63,8 @@ class Station(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True, blank=True)
     #TODO: not sure if source should be in Station or Serie
     source = models.ForeignKey(SourceType, on_delete=models.CASCADE, null=True, blank=True)
+    status = models.CharField(max_length=255,
+                              choices=[(i, i) for i in ['active', 'decomissioned', 'in maintenance']], default='active')
 
     objects = models.Manager()
     extra = PostgresManager()
