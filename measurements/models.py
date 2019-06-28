@@ -1,6 +1,7 @@
 # import pandas as pd
 from django.contrib.gis.db import models
 from django.contrib.postgres.fields import ArrayField
+from django.utils.text import slugify
 from django_pandas.io import read_frame
 from psqlextra.manager import PostgresManager
 
@@ -30,11 +31,25 @@ class Sensor(models.Model):
         return u'{}'.format(self.label)
 
 
+class LocationManager(models.Manager):
+    def get_flatjson(self):
+        data = []
+        qs = super().get_queryset()
+        for l in qs:
+            r = {'key': slugify(l.label),
+                 'latitute': l.geo.centroid.y,
+                 'longitude': l.geo.centroid.x,
+                 'name': l.label
+                 }
+            data.append(r)
+        return data
+
+
 class Location(models.Model):
     label = models.CharField(max_length=150)
     geo = models.PointField(srid=4326, null=True)
 
-    objects = models.Manager()
+    objects = LocationManager()
     extra = PostgresManager()
 
     def __str__(self):
