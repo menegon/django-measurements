@@ -103,10 +103,10 @@ def classify_fc(fc, k=8, zeros=True, cmap='Blues'):
 
     for i in items:
         value = float(i['properties']['value'])
-        _class = np.digitize(value, bins) - 1
+        bin = np.fmin(np.digitize(value, bins), k)
         # color = cmap(_class)
-        color = cmap[_class]
-        i['properties']['class'] = str(_class)
+        color = cmap[bin -1]
+        i['properties']['class'] = str(bin -1)
         # i['properties']['color'] = int(color[0] * 255), int(color[1] * 255), int(color[2] * 255), color[3]
         i['properties']['color'] = color + (1.0,)
         i['properties']['color'] = [str(c) for c in i['properties']['color']]
