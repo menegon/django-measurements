@@ -26,7 +26,7 @@ def get_serie(station, parameter, sensor='unknown', height=None):
 
 def load_serie(data, serie_id):
     df = pd.DataFrame(data)
-
+    df.dropna(inplace=True)
 
     df.reset_index(inplace=True)
     df.columns = ['timestamp', 'value']
