@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-measurements',
-    version='0.12',
+    version='0.13',
     # packages=['measurements'],
     packages=find_packages(),
     url='',
