@@ -24,10 +24,11 @@ class MttAPI(BaseSource):
 
         self.df = self.parse_xml(r.text)
 
-        self.df.index = pd.to_datetime(self.df.index)
+        if self.df is not None:
+            self.df.index = pd.to_datetime(self.df.index)
 
-        # localize datetime index
-        self.df.index = self.df.index.tz_localize(self.tz)
+            # localize datetime index
+            self.df.index = self.df.index.tz_localize(self.tz)
         return self.df
 
     def parse_xml(self, xml):
@@ -70,6 +71,8 @@ class MttAPI(BaseSource):
                           "mtt:{}".format(name[1]),)
             if df is not None:
                 dfs.append(df)
+        if len(dfs) == 0:
+            return None
         dftot = pd.concat(dfs, axis=1)
 
         # convert km/m to m/s (if exists)

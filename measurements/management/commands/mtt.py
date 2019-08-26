@@ -25,7 +25,8 @@ class Command(BaseCommand):
             apiclient = MttAPI()
             df = apiclient.get_df(s.code)
 
-            for k, v in PARAMETER_MAP.items():
-                if k in df.columns:
-                    serie = get_serie(s, v)
-                    load_serie(df[k].copy(), serie.id)
+            if df is not None:
+                for k, v in PARAMETER_MAP.items():
+                    if k in df.columns:
+                        serie = get_serie(s, v)
+                        load_serie(df[k].copy(), serie.id)
