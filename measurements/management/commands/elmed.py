@@ -29,13 +29,14 @@ class Command(BaseCommand):
             elmedapi = ElmedAPI(None,
                                 keys['private_key'])
             df = elmedapi.get_df(s.code, 5)
+            if df is not None and df.shape[0] > 0:
 
-            for k, _v in PARAMETER_MAP.items():
-                if not isinstance(_v, str):
-                    v, height = _v
-                else:
-                    v = _v
-                    height = None
-                if k in df.columns:
-                    serie = get_serie(s, v, height=height)
-                    load_serie(df[k].copy(), serie.id)
+                for k, _v in PARAMETER_MAP.items():
+                    if not isinstance(_v, str):
+                        v, height = _v
+                    else:
+                        v = _v
+                        height = None
+                    if k in df.columns:
+                        serie = get_serie(s, v, height=height)
+                        load_serie(df[k].copy(), serie.id)
