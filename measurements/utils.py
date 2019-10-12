@@ -27,7 +27,9 @@ def get_serie(station, parameter, sensor='unknown', height=None):
 def load_serie(data, serie_id):
     df = pd.DataFrame(data)
     df.dropna(inplace=True)
-
+    # check for empty series
+    if df.shape[0] == 0:
+        return False
     df.reset_index(inplace=True)
     df.columns = ['timestamp', 'value']
     df['serie_id'] = serie_id
@@ -35,7 +37,7 @@ def load_serie(data, serie_id):
     datadict = df.to_dict(orient='record')
     Measure.extra.on_conflict(df.columns.to_list(),
                               ConflictAction.UPDATE).bulk_insert(datadict)
-    return
+    return True
 
 
 def strong_float(value):
