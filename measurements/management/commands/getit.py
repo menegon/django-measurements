@@ -14,10 +14,12 @@ class Command(BaseCommand):
         ps = SourceType.objects.get(code='cnr')
         for s in ps.station_set.filter(status='active'):
             apiclient = GetitAPI()
-            df = apiclient.get_df(s.code)
+            df = apiclient.get_df(s.code, 24)
             if df is None:
                 continue
             for k, v in SOS_PARAMS.items():
+                print(df.head())
                 if v in df.columns:
                     serie = get_serie(s, v)
+                    print(df[v])
                     load_serie(df[v].copy(), serie.id)

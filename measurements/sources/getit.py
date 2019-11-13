@@ -105,12 +105,12 @@ class GetitAPI(BaseSource):
                     "value": value
                 }
                 data.append(rjson)
+            if len(data) == 0:
+                return None
             self.data = pd.DataFrame(data)
-            print(data)
 
         _df = self.data[self.data.location == code]
-        _df.pivot(index='datetime', values='value', columns='location').head()
-        return _df
+        return _df.pivot(index='datetime', values='value', columns='parameter').head()
 
 def syncvesk():
     sensors = {}
