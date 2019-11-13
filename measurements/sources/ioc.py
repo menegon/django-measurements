@@ -1,13 +1,8 @@
-import os
 from datetime import datetime
-import hmac
-import hashlib
 import urllib3
 urllib3.disable_warnings()
 import requests
 import pandas as pd
-from Crypto.Hash import HMAC
-from Crypto.Hash import SHA256
 from bs4 import BeautifulSoup
 
 from measurements.sources.base import BaseSource
