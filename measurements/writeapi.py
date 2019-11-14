@@ -8,6 +8,8 @@ from basicauth.decorators import basic_auth_required
 from django.http import HttpResponse
 from datetime import datetime
 import pytz
+import pandas as pd
+import io
 
 from .utils import get_serie
 
@@ -19,6 +21,29 @@ from .utils import get_serie
 TS_NS = 1000000000 # to convert from nanoseconds to seconds
 SERIE_FIELDS = set(['station', 'sensor', 'parameter'])
 SERIES_CACHE = {}
+
+
+@csrf_exempt
+def write_csv(request):
+    data = request.body.decode().strip()
+    df = pd.read_csv(io.StringIO(data), index_col=None)
+    df['timestamp'] = pd.to_datetime(df.timestamp)
+    if df.timestamp.dt.tz is None:
+        df.timestamp = df.dt.tz_localize('UTC')
+    df.sensor = df.sensor.fillna('unknown')
+    sdf = pd.DataFrame(Serie.objects.values('id', 'parameter__code', 'station__code', 'sensor__code'))
+    sdf.rename(columns={'id': 'serie_id',
+                        'parameter__code': 'parameter',
+                        'station__code': 'station',
+                        'sensor__code': 'sensor'}, inplace=True)
+    dfm = df.merge(sdf, left_on=['parameter', 'station', 'sensor'],
+                   right_on=['parameter', 'station', 'sensor'])
+    print(dfm)
+    cnames = ['serie_id', 'timestamp', 'value']
+    datadict = dfm[cnames].to_dict(orient='record')
+    Measure.extra.on_conflict(cnames,
+                              ConflictAction.UPDATE).bulk_insert(datadict)
+    return JsonResponse({"success": True})
 
 
 @csrf_exempt
