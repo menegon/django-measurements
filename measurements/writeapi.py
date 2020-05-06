@@ -26,11 +26,15 @@ SERIES_CACHE = {}
 @csrf_exempt
 def write_csv(request):
     data = request.body.decode().strip()
-    df = pd.read_csv(io.StringIO(data), index_col=None)
+    df = pd.read_csv(io.StringIO(data), index_col=None, sep=',', header=1)
     df['timestamp'] = pd.to_datetime(df.timestamp)
     if df.timestamp.dt.tz is None:
         df.timestamp = df.dt.tz_localize('UTC')
     df.sensor = df.sensor.fillna('unknown')
+    # create missing series
+    _df = df[['parameter', 'sensor', 'station']].drop_duplicates()
+    for r in _df.to_dict(orient='record'):
+        get_serie(**r)
     sdf = pd.DataFrame(Serie.objects.values('id', 'parameter__code', 'station__code', 'sensor__code'))
     sdf.rename(columns={'id': 'serie_id',
                         'parameter__code': 'parameter',
