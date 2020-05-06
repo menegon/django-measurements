@@ -20,8 +20,6 @@ class MttAPI(BaseSource):
     def get_df(self, code, last=1):
         url = self.baseurl + 'codice=' + code
         r = requests.get(url)
-        print(url)
-
         self.df = self.parse_xml(r.text)
 
         if self.df is not None:
