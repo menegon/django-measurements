@@ -8,6 +8,7 @@ from basicauth.decorators import basic_auth_required
 from django.http import HttpResponse
 from datetime import datetime
 import pytz
+import numpy as np
 import pandas as pd
 import io
 
@@ -26,10 +27,13 @@ SERIES_CACHE = {}
 @csrf_exempt
 def write_csv(request):
     data = request.body.decode().strip()
-    df = pd.read_csv(io.StringIO(data), index_col=None, sep=',', header=1)
+    df = pd.read_csv(io.StringIO(data),
+                     index_col=None,
+                     sep=',', header=1,
+                     dtype={'station': object})
     df['timestamp'] = pd.to_datetime(df.timestamp)
     if df.timestamp.dt.tz is None:
-        df.timestamp = df.dt.tz_localize('UTC')
+        df.timestamp = df.timestamp.dt.tz_localize('UTC')
     df.sensor = df.sensor.fillna('unknown')
     # create missing series
     _df = df[['parameter', 'sensor', 'station']].drop_duplicates()
@@ -40,13 +44,15 @@ def write_csv(request):
                         'parameter__code': 'parameter',
                         'station__code': 'station',
                         'sensor__code': 'sensor'}, inplace=True)
-    dfm = df.merge(sdf, left_on=['parameter', 'station', 'sensor'],
+    dfm = df.merge(sdf,
+                   left_on=['parameter', 'station', 'sensor'],
                    right_on=['parameter', 'station', 'sensor'])
-    print(dfm)
     cnames = ['serie_id', 'timestamp', 'value']
-    datadict = dfm[cnames].to_dict(orient='record')
-    Measure.extra.on_conflict(cnames,
-                              ConflictAction.UPDATE).bulk_insert(datadict)
+    _df = dfm[cnames].copy()
+    for chunk in np.array_split(_df, _df.shape[0] // 1000 + 1):
+        datadict = chunk.to_dict(orient='record')
+        Measure.extra.on_conflict(cnames,
+                                  ConflictAction.UPDATE).bulk_insert(datadict)
     return JsonResponse({"success": True})
 
 
@@ -69,9 +75,8 @@ def write_data(body):
     # stats = _write(data)
     Measure.extra.on_conflict(['timestamp', 'value', 'serie_id'],
                               ConflictAction.UPDATE).bulk_insert(datadict)
-    print('created')
     stats = {'updated': -1,
-             'created': -1}    
+             'created': -1}
     return stats
 
 def parse_line(line):
@@ -112,7 +117,7 @@ def parse_line(line):
           'serie_id': serie.id
     }
 
-    
+
 
     return _r
 
