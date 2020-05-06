@@ -22,11 +22,14 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         ps = SourceType.objects.get(code='mtt')
         for s in ps.station_set.filter(status='active'):
+            self.stdout.write("Loading station {} ... ".format(s), ending='')
             apiclient = MttAPI()
             df = apiclient.get_df(s.code)
-
-            if df is not None:
+            if df is not None and df.shape[0] > 0:
                 for k, v in PARAMETER_MAP.items():
                     if k in df.columns:
                         serie = get_serie(s, v)
                         load_serie(df[k].copy(), serie.id)
+                self.stdout.write("[OK]")
+            else:
+                self.stdout.write("[FAILED]")

@@ -22,10 +22,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         ps = SourceType.objects.get(code='davis')
         for s in ps.station_set.filter(status='active'):
+            self.stdout.write("Loading station {} ... ".format(s), ending='')
             davisapi = DavisAPI()
             df = davisapi.get_df(s.code, 5)
-
             for k, v in PARAMETER_MAP.items():
                 if k in df.columns:
                     serie = get_serie(s, v)
                     load_serie(df[k].copy(), serie.id)
+            self.stdout.write("[OK]")

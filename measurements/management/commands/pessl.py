@@ -20,14 +20,17 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         ps = SourceType.objects.get(code='pessl')
-        for s in ps.station_set.filter(status='active'):
+        for s in ps.station_set.filter  (status='active'):
+            self.stdout.write("Loading station {} ... ".format(s), ending='')
             keys = SOURCE_AUTH['pessl'][s.network.code]
-            print(keys)
             pesslapi = PesslAPI(keys['public_key'],
                                 keys['private_key'])
             df = pesslapi.get_df(s.code, 100)
-
-            for k, v in PARAMETER_MAP.items():
-                if k in df.columns:
-                    serie = get_serie(s, v)
-                    load_serie(df[k].copy(), serie.id)
+            if df is not None and df.shape[0] > 0:
+                for k, v in PARAMETER_MAP.items():
+                    if k in df.columns:
+                        serie = get_serie(s, v)
+                        load_serie(df[k].copy(), serie.id)
+                self.stdout.write("[OK]")
+            else:
+                self.stdout.write("[FAILED]")

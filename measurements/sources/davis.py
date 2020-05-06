@@ -30,10 +30,8 @@ class DavisAPI(BaseSource):
                             quoting=csv.QUOTE_NONE)
         data = []
         for j, row in enumerate(reader):
-            print(j, row)
             data_str = row[1] + ' ' + row[0].replace('ERR', '').replace('.', ':')
             _datetime = parser.parse(data_str, dayfirst=True)
-            print(_datetime)
             r = {'datetime': _datetime,
                  'TempAria': strong_float(row[2]),
                  'UmidAriaRel': strong_float(row[3]),

@@ -90,7 +90,7 @@ class PesslAPI(BaseSource):
     def get_df(self, code, last=1):
         d = self._get_data(code, route='pretty', last=last)
         if d is False:
-            return d
+            return None # get_df should return None when it fails
         self.df = self._todf(d)
 
         # merge level names: e.g. variable|aggregate

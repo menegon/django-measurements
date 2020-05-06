@@ -20,17 +20,17 @@ PARAMETER_MAP = {"temp2m": "AtTemp",
                  }
 
 class Command(BaseCommand):
-    help = "Command to import PESSL data"
+    help = "Command for importing ELMED data"
 
     def handle(self, *args, **options):
         ps = SourceType.objects.get(code='elmed')
         for s in ps.station_set.filter(status='active'):
+            self.stdout.write("Loading station {} ... ".format(s), ending='')
             keys = SOURCE_AUTH['elmed'][s.network.code]
             elmedapi = ElmedAPI(None,
                                 keys['private_key'])
             df = elmedapi.get_df(s.code, 5)
             if df is not None and df.shape[0] > 0:
-
                 for k, _v in PARAMETER_MAP.items():
                     if not isinstance(_v, str):
                         v, height = _v
@@ -40,3 +40,6 @@ class Command(BaseCommand):
                     if k in df.columns:
                         serie = get_serie(s, v, height=height)
                         load_serie(df[k].copy(), serie.id)
+                self.stdout.write("[OK]")
+            else:
+                self.stdout.write("[FAILED]")
