@@ -1,5 +1,4 @@
-from django.contrib import admin
-
+from django.contrib.gis import admin
 from .models import Parameter, Sensor, Location, Serie, Measure, Network, SourceType, Station
 
 
@@ -11,7 +10,7 @@ class SensorAdmin(admin.ModelAdmin):
     pass
 
 
-class LocationAdmin(admin.ModelAdmin):
+class LocationAdmin(admin.OSMGeoAdmin):
     pass
 
 
