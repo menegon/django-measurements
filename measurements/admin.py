@@ -1,5 +1,17 @@
-from django.contrib.gis import admin
+from django.conf import settings
+from django.contrib import admin
 from .models import Parameter, Sensor, Location, Serie, Measure, Network, SourceType, Station
+
+load_google = False
+try:
+    settings.MAP_WIDGETS['GOOGLE_MAP_API_KEY'] 
+    from mapwidgets.widgets import GooglePointFieldInlineWidget
+    from django.contrib.gis.db.models import GeometryField
+    formfield_overrides = {
+        GeometryField: {"widget": GooglePointFieldInlineWidget}
+    }
+except KeyError:
+    formfield_overrides = {}
 
 
 class ParameterAdmin(admin.ModelAdmin):
@@ -10,8 +22,8 @@ class SensorAdmin(admin.ModelAdmin):
     pass
 
 
-class LocationAdmin(admin.OSMGeoAdmin):
-    pass
+class LocationAdmin(admin.ModelAdmin):
+    formfield_overrides = formfield_overrides
 
 
 class NetworkAdmin(admin.ModelAdmin):
