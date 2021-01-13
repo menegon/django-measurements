@@ -10,7 +10,7 @@ try:
     formfield_overrides = {
         GeometryField: {"widget": GooglePointFieldInlineWidget}
     }
-except KeyError:
+except (KeyError, AttributeError) as e:
     formfield_overrides = {}
 
 
