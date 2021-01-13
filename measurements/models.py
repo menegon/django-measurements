@@ -122,6 +122,7 @@ class Serie(models.Model):
 
 
 class Measure(models.Model):
+    id = models.BigAutoField(primary_key=True)
     serie = models.ForeignKey(Serie, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(db_index=True)
     value = models.FloatField()
