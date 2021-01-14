@@ -33,9 +33,10 @@ def load_serie(data, serie_id):
     df.reset_index(inplace=True)
     df.columns = ['timestamp', 'value']
     df['serie_id'] = serie_id
+    conflict_columns = ['serie_id', 'timestamp']
 
     datadict = df.to_dict(orient='record')
-    Measure.extra.on_conflict(df.columns.to_list(),
+    Measure.extra.on_conflict(conflict_columns,
                               ConflictAction.UPDATE).bulk_insert(datadict)
     return True
 
