@@ -76,18 +76,19 @@ class PesslAPI(BaseSource):
         request = "/{}/{}/raw/last/{}".format(route, code, last)
         headers = self.get_auth_headers(request)
         url = "{}{}".format(self.baseurl, request)
-        # print url
         try:
             r = requests.get(url, headers=headers, verify=False)
         except:
-            print('ERRORE COMUNICAZIONE')
+            print('Connection error')
             return False
         else:
             if r.status_code == 200:
                 return r.json()
+            else:
+                pass
             return False
 
-    def get_df(self, code, last=1):
+    def get_df(self, code, last=24):
         d = self._get_data(code, route='pretty', last=last)
         if d is False:
             return None # get_df should return None when it fails

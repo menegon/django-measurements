@@ -21,9 +21,9 @@ class ElmedAPI(BaseSource):
         self.tz = tz
 
 
-    def get_df(self, code, last=1):
+    def get_df(self, code, last=24):
         end_date = datetime.datetime.today()
-        start_date = end_date - datetime.timedelta(days=last)
+        start_date = end_date - datetime.timedelta(hours=last)
         payload = {"stationnr[]": code,
                    "auth": self.private_key,
                    "format": "csv_large",

@@ -18,14 +18,22 @@ PARAMETER_MAP = {"Precipitation|sum": "Precipitation", #
 class Command(BaseCommand):
     help = "Command to import PESSL data"
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--hours',
+            type=int,
+            default=24
+        )
+
     def handle(self, *args, **options):
+        hours = options['hours']
         ps = SourceType.objects.get(code='pessl')
         for s in ps.station_set.filter  (status='active'):
             self.stdout.write("Loading station {} ... ".format(s), ending='')
             keys = SOURCE_AUTH['pessl'][s.network.code]
             pesslapi = PesslAPI(keys['public_key'],
                                 keys['private_key'])
-            df = pesslapi.get_df(s.code, 100)
+            df = pesslapi.get_df(s.code, hours)
             if df is not None and df.shape[0] > 0:
                 for k, v in PARAMETER_MAP.items():
                     if k in df.columns:

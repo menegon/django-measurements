@@ -22,14 +22,22 @@ PARAMETER_MAP = {"temp2m": "AtTemp",
 class Command(BaseCommand):
     help = "Command for importing ELMED data"
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--hours',
+            type=int,
+            default=24
+        )
+
     def handle(self, *args, **options):
+        hours = options['hours']
         ps = SourceType.objects.get(code='elmed')
         for s in ps.station_set.filter(status='active'):
             self.stdout.write("Loading station {} ... ".format(s), ending='')
             keys = SOURCE_AUTH['elmed'][s.network.code]
             elmedapi = ElmedAPI(None,
                                 keys['private_key'])
-            df = elmedapi.get_df(s.code, 5)
+            df = elmedapi.get_df(s.code, hours)
             if df is not None and df.shape[0] > 0:
                 for k, _v in PARAMETER_MAP.items():
                     if not isinstance(_v, str):
