@@ -131,4 +131,4 @@ class Measure(models.Model):
     extra = PostgresManager()
 
     class Meta:
-        unique_together = ('serie', 'timestamp', 'value')
+        unique_together = ('serie', 'timestamp') #, 'value')
